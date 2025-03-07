@@ -2,8 +2,8 @@ include /usr/share/dpkg/pkg-info.mk
 
 # also bump proxmox-kernel-meta if the default MAJ.MIN version changes!
 KERNEL_MAJ=6
-KERNEL_MIN=11
-KERNEL_PATCHLEVEL=11
+KERNEL_MIN=12
+KERNEL_PATCHLEVEL=18
 # increment KREL for every published package release!
 # rebuild packages with new KREL and run 'make abiupdate'
 KREL=1
@@ -12,7 +12,7 @@ KERNEL_MAJMIN=$(KERNEL_MAJ).$(KERNEL_MIN)
 KERNEL_VER=$(KERNEL_MAJMIN).$(KERNEL_PATCHLEVEL)
 
 DEB_VERSION=$(KERNEL_VER)-$(KREL)
-EXTRAVERSION=-$(KREL)-pve
+EXTRAVERSION=-$(KREL)-pws
 KVNAME=$(KERNEL_VER)$(EXTRAVERSION)
 PACKAGE=proxmox-kernel-$(KVNAME)
 HDRPACKAGE=proxmox-headers-$(KVNAME)
@@ -104,8 +104,9 @@ $(KERNEL_SRC).prepared: $(KERNEL_SRC_SUBMODULE) | submodule
 	mkdir -p $(BUILD_DIR)
 	cp -a $(KERNEL_SRC_SUBMODULE) $(BUILD_DIR)/$(KERNEL_SRC)
 # TODO: split for archs, track and diff in our repository?
-	cd $(BUILD_DIR)/$(KERNEL_SRC); python3 debian/scripts/misc/annotations --arch amd64 --export >../../$(KERNEL_CFG_ORG)
-	cp $(KERNEL_CFG_ORG) $(BUILD_DIR)/$(KERNEL_SRC)/.config
+#	cd $(BUILD_DIR)/$(KERNEL_SRC); python3 debian/scripts/misc/annotations --arch amd64 --export >../../$(KERNEL_CFG_ORG)
+#	cp $(KERNEL_CFG_ORG) $(BUILD_DIR)/$(KERNEL_SRC)/.config
+	cp config $(BUILD_DIR)/$(KERNEL_SRC)/.config
 	sed -i $(BUILD_DIR)/$(KERNEL_SRC)/Makefile -e 's/^EXTRAVERSION.*$$/EXTRAVERSION=$(EXTRAVERSION)/'
 	rm -rf $(BUILD_DIR)/$(KERNEL_SRC)/debian $(BUILD_DIR)/$(KERNEL_SRC)/debian.master
 	set -e; cd $(BUILD_DIR)/$(KERNEL_SRC); \
