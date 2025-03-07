@@ -1,0 +1,30 @@
+name: Build Debian Package
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'  # This will clone submodules as well
+
+      - name: Set up Docker container
+        uses: docker://debian:bookworm
+        with:
+          args: |
+            /bin/bash -c "
+            export DEBIAN_FRONTEND=noninteractive &&
+            apt-get update &&
+            apt-get install -y build-essential devscripts &&
+            make deb
+            "
