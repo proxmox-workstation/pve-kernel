@@ -40,7 +40,7 @@ jobs:
       - name: Download submodules
         id: download-submodules
         run: |
-          git config --global --add safe.directory .
+          git config --global safe.directory '*'
           git submodule update --init --recursive
       - name: Build the kernel
         id: build-kernel-package
@@ -51,7 +51,7 @@ jobs:
           export DEBIAN_FRONTEND=noninteractive
           apt-get update
           apt-get install -y build-essential devscripts debhelper dh-python asciidoc-base bc bison cpio dwarves flex kmod libdw-dev libiberty-dev libnuma-dev libpve-common-perl libslang2-dev lz4 rsync xmlto
-          yes | mk-build-deps -ir /github/workspace/submodules/zfsonlinux/debian/control
+          yes | mk-build-deps -ir submodules/zfsonlinux/debian/control
           make -j$(nproc) deb
           echo "full_version=${{ github.sha }}" >> "$GITHUB_OUTPUT"
       - name: Upload package artifact
