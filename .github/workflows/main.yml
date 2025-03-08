@@ -9,27 +9,71 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    outputs:
+      full_version: ${{ steps.build-kernel-package.outputs.full_version }}
+    container: 
+      image: archlinux:base-devel
+      volumes:
+        - /usr:/usr-host
+        - /opt:/opt-host
+      options: --privileged
     steps:
+      - name: Maximize build space
+        run: |
+          df -h
+          rm -rf /usr-host/share/dotnet
+          rm -rf /usr-host/share/swift
+          rm -rf /usr-host/share/java
+          rm -rf /usr-host/local/lib/android
+          rm -rf /opt-host/ghc
+          rm -rf /opt-host/hostedtoolcache
+          rm -rf /opt-host/az
+          df -h
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'  # This will clone submodules as well
 
       - name: Set up Docker container
-        uses: docker://debian:bookworm
+        id: build-kernel-package
+        run: |
+          apt-get update
+          apt-get install -y wget
+          echo 'deb [arch=amd64] http://download.proxmox.com/debian/pve bookworm pve-no-subscription' > /etc/apt/sources.list.d/pve-install-repo.list
+          echo 'deb http://security.debian.org/debian-security bookworm-security main contrib' >> /etc/apt/sources.list.d/pve-install-repo.list
+          wget https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update
+          apt-get install -y build-essential devscripts debhelper dh-python asciidoc-base bc bison cpio dwarves flex kmod libdw-dev libiberty-dev libnuma-dev libpve-common-perl libslang2-dev lz4 rsync xmlto
+          yes | mk-build-deps -ir /github/workspace/submodules/zfsonlinux/debian/control
+          git config --global --add safe.directory /github/workspace
+          make -j$(nproc) deb
+          echo "full_version=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
         with:
-          args: |
-            /bin/bash -c "
-            apt-get update &&
-            apt-get install -y wget &&
-            echo 'deb [arch=amd64] http://download.proxmox.com/debian/pve bookworm pve-no-subscription' > /etc/apt/sources.list.d/pve-install-repo.list &&
-            echo 'deb http://security.debian.org/debian-security bookworm-security main contrib' >> /etc/apt/sources.list.d/pve-install-repo.list &&
-            wget https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg &&
-            export DEBIAN_FRONTEND=noninteractive &&
-            apt-get update &&
-            apt-get install -y build-essential devscripts debhelper dh-python asciidoc-base bc bison cpio dwarves flex kmod libdw-dev libiberty-dev libnuma-dev libpve-common-perl libslang2-dev lz4 rsync xmlto &&
-            yes | mk-build-deps -ir /github/workspace/submodules/zfsonlinux/debian/control &&
-            git config --global --add safe.directory /github/workspace &&
-            make -j$(nproc) deb
-            "
+          name: linux-package
+          path: |
+            *.deb
+          if-no-files-found: error
+  
+  make-release:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-package
+          path: .
+
+      - name: Make release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: linux-chimeraos-${{needs.build.outputs.full_version}}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: false
+          prerelease: true
+          fail_on_unmatched_files: true
+          files: |
+            *.deb
