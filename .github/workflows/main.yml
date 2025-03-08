@@ -31,15 +31,19 @@ jobs:
           df -h
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Install basic dependencies
+        id: install-deps
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update
+          apt-get install -y wget git
       - name: Download submodules
         id: download-submodules
         run: |
           git submodule update --init --recursive
-      - name: Set up Docker container
+      - name: Build the kernel
         id: build-kernel-package
         run: |
-          apt-get update
-          apt-get install -y wget
           echo 'deb [arch=amd64] http://download.proxmox.com/debian/pve bookworm pve-no-subscription' > /etc/apt/sources.list.d/pve-install-repo.list
           echo 'deb http://security.debian.org/debian-security bookworm-security main contrib' >> /etc/apt/sources.list.d/pve-install-repo.list
           wget https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg
