@@ -130,6 +130,7 @@ $(KERNEL_SRC).prepared: $(KERNEL_SRC_SUBMODULE) | submodule
 	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -e CONFIG_DRM_AMD_COLOR_STEAMDECK
 	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -d CONFIG_VIRT_DRIVERS
 	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -d CONFIG_DRM_QXL
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -d CONFIG_SECURITY_SELINUX
 	sed -i $(BUILD_DIR)/$(KERNEL_SRC)/Makefile -e 's/^EXTRAVERSION.*$$/EXTRAVERSION=$(EXTRAVERSION)/'
 	rm -rf $(BUILD_DIR)/$(KERNEL_SRC)/debian $(BUILD_DIR)/$(KERNEL_SRC)/debian.master
 	set -e; cd $(BUILD_DIR)/$(KERNEL_SRC); \
