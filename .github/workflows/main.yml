@@ -24,5 +24,6 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive &&
             apt-get update &&
             apt-get install -y build-essential devscripts &&
-            make deb
+            git config --global --add safe.directory /github/workspace &&
+            make -j$(nproc) deb
             "
