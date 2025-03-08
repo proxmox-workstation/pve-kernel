@@ -23,7 +23,8 @@ jobs:
             /bin/bash -c "
             export DEBIAN_FRONTEND=noninteractive &&
             apt-get update &&
-            apt-get install -y build-essential devscripts &&
+            apt-get install -y build-essential devscripts debhelper dh-python &&
+            mk-build-deps -ir /github/workspace/debian/control &&
             git config --global --add safe.directory /github/workspace &&
             make -j$(nproc) deb
             "
