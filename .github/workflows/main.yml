@@ -23,7 +23,7 @@ jobs:
             /bin/bash -c "
             export DEBIAN_FRONTEND=noninteractive &&
             apt-get update &&
-            apt-get install -y build-essential devscripts debhelper dh-python dh_sphinxdoc &&
+            apt-get install -y build-essential devscripts debhelper dh-python &&
             mk-build-deps -ir /github/workspace/submodules/zfsonlinux/debian/control &&
             git config --global --add safe.directory /github/workspace &&
             make -j$(nproc) deb
