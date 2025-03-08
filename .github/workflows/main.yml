@@ -12,7 +12,7 @@ jobs:
     outputs:
       full_version: ${{ steps.build-kernel-package.outputs.full_version }}
     container: 
-      image: archlinux:base-devel
+      image: debian:bookworm
       volumes:
         - /usr:/usr-host
         - /opt:/opt-host
