@@ -107,6 +107,29 @@ $(KERNEL_SRC).prepared: $(KERNEL_SRC_SUBMODULE) | submodule
 #	cd $(BUILD_DIR)/$(KERNEL_SRC); python3 debian/scripts/misc/annotations --arch amd64 --export >../../$(KERNEL_CFG_ORG)
 #	cp $(KERNEL_CFG_ORG) $(BUILD_DIR)/$(KERNEL_SRC)/.config
 	cp config $(BUILD_DIR)/$(KERNEL_SRC)/.config
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config --enable CONFIG_FTRACE \
+                     --enable CONFIG_FUNCTION_TRACER \
+                     --enable CONFIG_STACK_TRACER
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config --enable CONFIG_STACK_VALIDATION
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config --enable CONFIG_MODULE_COMPRESS
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config --enable CONFIG_MODULE_COMPRESS_ZSTD
+# Requested by Alexandre Frade to fix issues in python-gbinder
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config --enable CONFIG_ANDROID_BINDERFS
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config --enable CONFIG_ANDROID_BINDER_IPC
+# Additional modules
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -m CONFIG_HID_ASUS_ALLY
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -e CONFIG_ASUS_WMI_BIOS
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -m CONFIG_ASUS_WMI
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -m CONFIG_ASUS_ARMOURY
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -d CONFIG_DRM_RADEON
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -d CONFIG_HYPERVISOR_GUEST
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -d CONFIG_AGP
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -d CONFIG_DRM_MGAG200
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -d CONFIG_REISERFS_FS
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -e CONFIG_DRM_AMD_COLOR_STEAMDECK
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -d CONFIG_SECURITY_SELINUX
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -d CONFIG_VIRT_DRIVERS
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -d CONFIG_DRM_QXL
 	sed -i $(BUILD_DIR)/$(KERNEL_SRC)/Makefile -e 's/^EXTRAVERSION.*$$/EXTRAVERSION=$(EXTRAVERSION)/'
 	rm -rf $(BUILD_DIR)/$(KERNEL_SRC)/debian $(BUILD_DIR)/$(KERNEL_SRC)/debian.master
 	set -e; cd $(BUILD_DIR)/$(KERNEL_SRC); \
