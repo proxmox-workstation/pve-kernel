@@ -1,2 +1,4 @@
 ubuntu-zesty
 *.prepared
+/temp/**
+/ubuntu-patches/**
