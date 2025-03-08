@@ -29,14 +29,14 @@ jobs:
           rm -rf /opt-host/hostedtoolcache
           rm -rf /opt-host/az
           df -h
-      - name: Checkout repository
-        uses: actions/checkout@v4
       - name: Install basic dependencies
         id: install-deps
         run: |
           export DEBIAN_FRONTEND=noninteractive
           apt-get update
           apt-get install -y wget git
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Download submodules
         id: download-submodules
         run: |
