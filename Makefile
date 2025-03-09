@@ -113,6 +113,7 @@ $(KERNEL_SRC).prepared: $(KERNEL_SRC_SUBMODULE) | submodule
 	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config --enable CONFIG_STACK_VALIDATION
 	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config --enable CONFIG_MODULE_COMPRESS
 	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config --enable CONFIG_MODULE_COMPRESS_ZSTD
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config --enable MODULE_DECOMPRESS
 # Requested by Alexandre Frade to fix issues in python-gbinder
 	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config --enable CONFIG_ANDROID_BINDERFS
 	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config --enable CONFIG_ANDROID_BINDER_IPC
