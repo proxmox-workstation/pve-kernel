@@ -149,9 +149,9 @@ $(KERNEL_SRC).prepared: $(KERNEL_SRC_SUBMODULE) | submodule
 	    patch --batch -p1 < "$${patch}"; \
 	  done
 	touch $@
-#sed -i 's/MODULE_IMPORT_NS("ASUS_WMI");/MODULE_IMPORT_NS(ASUS_WMI);/g' "$(BUILD_DIR)/$(KERNEL_SRC)/drivers/platform/x86/asus-armoury.c"
-#sed -i 's/MODULE_IMPORT_NS("ASUS_WMI");/MODULE_IMPORT_NS(ASUS_WMI);/g' "$(BUILD_DIR)/$(KERNEL_SRC)/drivers/hid/hid-asus-ally.c"
-#sed -i 's/MODULE_IMPORT_NS("ASUS_WMI");/MODULE_IMPORT_NS(ASUS_WMI);/g' "$(BUILD_DIR)/$(KERNEL_SRC)/drivers/hid/hid-asus.c"
+	sed -i 's/MODULE_IMPORT_NS("ASUS_WMI");/MODULE_IMPORT_NS(ASUS_WMI);/g' "$(BUILD_DIR)/$(KERNEL_SRC)/drivers/platform/x86/asus-armoury.c"
+	sed -i 's/MODULE_IMPORT_NS("ASUS_WMI");/MODULE_IMPORT_NS(ASUS_WMI);/g' "$(BUILD_DIR)/$(KERNEL_SRC)/drivers/hid/hid-asus-ally.c"
+	sed -i 's/MODULE_IMPORT_NS("ASUS_WMI");/MODULE_IMPORT_NS(ASUS_WMI);/g' "$(BUILD_DIR)/$(KERNEL_SRC)/drivers/hid/hid-asus.c"
 	sed -i 's/"ASUS_WMI");/ASUS_WMI);/g' "$(BUILD_DIR)/$(KERNEL_SRC)/drivers/platform/x86/asus-wmi.c"
 	cd "$(BUILD_DIR)/$(KERNEL_SRC)"; make nsdeps
 
