@@ -34,7 +34,15 @@ jobs:
         run: |
           export DEBIAN_FRONTEND=noninteractive
           apt-get update
-          apt-get install -y wget git
+          apt-get install -y wget git lsb-release wget software-properties-common gnupg
+      - name: Install clang
+        id: install-clang
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          ./llvm.sh
+          apt-get install -y clang-18 lldb-18 lld-18 clangd-18
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Download submodules
@@ -52,7 +60,7 @@ jobs:
           apt-get update
           apt-get install -y build-essential devscripts debhelper dh-python asciidoc-base bc bison cpio dwarves flex kmod libdw-dev libiberty-dev libnuma-dev libpve-common-perl libslang2-dev lz4 rsync xmlto
           yes | mk-build-deps -ir submodules/zfsonlinux/debian/control
-          make -j$(nproc) deb
+          LLVM=-18 make -j$(nproc) deb
           echo "full_version=${{ github.sha }}" >> "$GITHUB_OUTPUT"
       - name: Upload package artifact
         uses: actions/upload-artifact@v4
