@@ -76,11 +76,11 @@ jobs:
           export DEBIAN_FRONTEND=noninteractive
           apt-get update
           apt-get install -y build-essential devscripts debhelper dh-python asciidoc-base bc bison cpio dwarves flex kmod libdw-dev libiberty-dev libnuma-dev libpve-common-perl libslang2-dev lz4 rsync xmlto
-          apt-get install -y libunwind-dev libpfm4-dev coccinelle openjdk-17-jdk libcapstone-dev libbabeltrace-dev systemtap-sdt-dev libzstd-dev
+          apt-get install -y libunwind-dev libpfm4-dev coccinelle openjdk-17-jdk libcapstone-dev libbabeltrace-dev systemtap-sdt-dev libzstd-dev dwarves zstd
           yes | mk-build-deps -ir submodules/zfsonlinux/debian/control
           export LLVM=1 LLVM_IAS=1
           cmake --install dwarves_build
-          LLVM=1 make -j$(nproc) deb
+          LLVM=1 LLVM_IAS=1 make -j$(nproc) deb
           echo "full_version=${{ github.sha }}" >> "$GITHUB_OUTPUT"
       - name: Upload package artifact
         uses: actions/upload-artifact@v4
