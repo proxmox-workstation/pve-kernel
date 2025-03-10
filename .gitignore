@@ -2,3 +2,6 @@ ubuntu-zesty
 *.prepared
 /temp/**
 /ubuntu-patches/**
+/dwarves
+/dwarves_build
+/proxmox-kernel-*
