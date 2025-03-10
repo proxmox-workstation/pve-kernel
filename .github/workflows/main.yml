@@ -61,12 +61,12 @@ jobs:
         run: |
           git config --global safe.directory '*'
           git submodule update --init --recursive
-      - name: Build and Install pahole
+      - name: Download pahole
         id: pahole
         run: |
           apt-get install -y cmake python3 python3-matplotlib zlib1g-dev libelf-dev
+          git clone https://github.com/acmel/dwarves.git --recursive --branch v1.29 --single-branch
           cmake -S dwarves -B dwarves_build -G "Unix Makefiles" -D __LIB=lib -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr -DBUILD_SHARED_LIBS=OFF
-          cmake --build dwarves_build
       - name: Build the kernel
         id: build-kernel-package
         run: |
@@ -79,7 +79,9 @@ jobs:
           apt-get install -y libunwind-dev libpfm4-dev coccinelle openjdk-17-jdk libcapstone-dev libbabeltrace-dev systemtap-sdt-dev libzstd-dev dwarves zstd
           yes | mk-build-deps -ir submodules/zfsonlinux/debian/control
           export LLVM=1 LLVM_IAS=1
+          cmake --build dwarves_build
           cmake --install dwarves_build
+          rm -rf dwarves_build
           LLVM=1 LLVM_IAS=1 make -j$(nproc) deb
           echo "full_version=${{ github.sha }}" >> "$GITHUB_OUTPUT"
       - name: Upload package artifact
