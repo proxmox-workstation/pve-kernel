@@ -35,6 +35,12 @@ jobs:
           export DEBIAN_FRONTEND=noninteractive
           apt-get update
           apt-get install -y wget git lsb-release wget software-properties-common gnupg
+      - name: Install more dependencies
+        id: install-more
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get install -y build-essential devscripts debhelper dh-python asciidoc-base bc bison cpio dwarves flex kmod libdw-dev libiberty-dev libnuma-dev  libslang2-dev lz4 rsync xmlto
+          apt-get install -y libunwind-dev libpfm4-dev coccinelle openjdk-17-jdk libcapstone-dev libbabeltrace-dev systemtap-sdt-dev libzstd-dev dwarves zstd
       - name: Install clang
         id: install-clang
         run: |
@@ -75,8 +81,7 @@ jobs:
           wget https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg
           export DEBIAN_FRONTEND=noninteractive
           apt-get update
-          apt-get install -y build-essential devscripts debhelper dh-python asciidoc-base bc bison cpio dwarves flex kmod libdw-dev libiberty-dev libnuma-dev libpve-common-perl libslang2-dev lz4 rsync xmlto
-          apt-get install -y libunwind-dev libpfm4-dev coccinelle openjdk-17-jdk libcapstone-dev libbabeltrace-dev systemtap-sdt-dev libzstd-dev dwarves zstd
+          apt-get install -y libpve-common-perl
           yes | mk-build-deps -ir submodules/zfsonlinux/debian/control
           export LLVM=1 LLVM_IAS=1
           cmake --build dwarves_build
