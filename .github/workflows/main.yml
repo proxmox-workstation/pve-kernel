@@ -43,6 +43,17 @@ jobs:
           chmod +x llvm.sh
           ./llvm.sh
           apt-get install -y clang-18 lldb-18 lld-18 clangd-18
+          ln -s /usr/bin/clang++-18 /usr/bin/clang++
+          ln -s /usr/bin/clang-18 /usr/bin/clang
+          ln -s /usr/bin/llvm-18 /usr/bin/llvm
+          ln -s /usr/bin/lld-18 /usr/bin/lld
+          ln -s /usr/bin/llvm-nm-18 /usr/bin/llvm-nm
+          ln -s /usr/bin/llvm-objcopy-18 /usr/bin/llvm-objcopy
+          ln -s /usr/bin/llvm-objdump-18 /usr/bin/llvm-objdump
+          ln -s /usr/bin/llvm-readelf-18 /usr/bin/llvm-readelf
+          ln -s /usr/bin/llvm-ar-18 /usr/bin/llvm-ar
+          ln -s /usr/bin/llvm-strip-18 /usr/bin/llvm-strip
+          ln -s /usr/bin/ld.lld-18 /usr/bin/ld.lld
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Download submodules
@@ -50,6 +61,12 @@ jobs:
         run: |
           git config --global safe.directory '*'
           git submodule update --init --recursive
+      - name: Build and Install pahole
+        id: pahole
+        run: |
+          apt-get install -y cmake python3 python3-matplotlib zlib1g-dev libelf-dev
+          cmake -S dwarves -B dwarves_build -G "Unix Makefiles" -D __LIB=lib -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr -DBUILD_SHARED_LIBS=OFF
+          cmake --build dwarves_build
       - name: Build the kernel
         id: build-kernel-package
         run: |
@@ -58,9 +75,12 @@ jobs:
           wget https://enterprise.proxmox.com/debian/proxmox-release-bookworm.gpg -O /etc/apt/trusted.gpg.d/proxmox-release-bookworm.gpg
           export DEBIAN_FRONTEND=noninteractive
           apt-get update
-          apt-get install -y build-essential devscripts debhelper dh-python asciidoc-base bc bison cpio dwarves flex kmod libdw-dev libiberty-dev libnuma-dev libpve-common-perl libslang2-dev lz4 rsync xmlto coccinelle
+          apt-get install -y build-essential devscripts debhelper dh-python asciidoc-base bc bison cpio dwarves flex kmod libdw-dev libiberty-dev libnuma-dev libpve-common-perl libslang2-dev lz4 rsync xmlto
+          apt-get install -y libunwind-dev libpfm4-dev coccinelle openjdk-17-jdk libcapstone-dev libbabeltrace-dev systemtap-sdt-dev libzstd-dev
           yes | mk-build-deps -ir submodules/zfsonlinux/debian/control
-          LLVM=-18 make -j$(nproc) deb
+          export LLVM=1 LLVM_IAS=1
+          cmake --install dwarves_build
+          LLVM=1 make -j$(nproc) deb
           echo "full_version=${{ github.sha }}" >> "$GITHUB_OUTPUT"
       - name: Upload package artifact
         uses: actions/upload-artifact@v4
