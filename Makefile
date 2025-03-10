@@ -57,6 +57,8 @@ DEBS=$(DST_DEB) $(META_DEB) $(HDR_DEB) $(META_HDR_DEB) $(LINUX_TOOLS_DEB) # $(LI
 
 all: deb
 deb: $(DEBS)
+	pwd
+	ls -lah .
 
 $(META_DEB) $(META_HDR_DEB) $(LINUX_TOOLS_DEB) $(HDR_DEB): $(DST_DEB)
 $(DST_DEB): $(BUILD_DIR).prepared

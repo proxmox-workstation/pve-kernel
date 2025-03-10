@@ -161,7 +161,7 @@ binary: install
 	touch $@
 
 .compile_mark: .config_mark
-	$(MAKE) -C $(KERNEL_SRC) KBUILD_BUILD_VERSION_TIMESTAMP="PMX $(DEB_VERSION) ($(CHANGELOG_DATE_UTC_ISO))"
+	$(MAKE) -j$(nproc) -C $(KERNEL_SRC) KBUILD_BUILD_VERSION_TIMESTAMP="PMX $(DEB_VERSION) ($(CHANGELOG_DATE_UTC_ISO))"
 	touch $@
 
 .install_mark: .compile_mark .modules_compile_mark
@@ -171,7 +171,7 @@ binary: install
 	install -m 644 $(KERNEL_SRC)/.config debian/$(PMX_KERNEL_PKG)/boot/config-$(KVNAME)
 	install -m 644 $(KERNEL_SRC)/System.map debian/$(PMX_KERNEL_PKG)/boot/System.map-$(KVNAME)
 	install -m 644 $(KERNEL_SRC)/$(KERNEL_IMAGE_PATH) debian/$(PMX_KERNEL_PKG)/boot/$(KERNEL_INSTALL_FILE)-$(KVNAME)
-	$(MAKE) -C $(KERNEL_SRC) INSTALL_MOD_PATH=$(BUILD_DIR)/debian/$(PMX_KERNEL_PKG)/ modules_install
+	$(MAKE) -j$(nproc) -C $(KERNEL_SRC) INSTALL_MOD_PATH=$(BUILD_DIR)/debian/$(PMX_KERNEL_PKG)/ modules_install
 	# install zfs drivers
 	install -d -m 0755 debian/$(PMX_KERNEL_PKG)/lib/modules/$(KVNAME)/zfs
 	install -m 644 $(MODULES)/zfs.ko $(MODULES)/spl.ko debian/$(PMX_KERNEL_PKG)/lib/modules/$(KVNAME)/zfs
@@ -328,8 +328,8 @@ fwcheck: fwlist-$(KVNAME) fwlist-previous
 	@echo "if this check fails, add fwlist-$(KVNAME) to the pve-firmware repository and upload a new firmware package together with the $(KVNAME) kernel"
 	sort fwlist-previous | uniq > fwlist-previous.sorted
 	sort fwlist-$(KVNAME) | uniq > fwlist-$(KVNAME).sorted
-	diff -up -N fwlist-previous.sorted fwlist-$(KVNAME).sorted > fwlist.diff
-	rm fwlist.diff fwlist-previous.sorted fwlist-$(KVNAME).sorted
+#	diff -up -N fwlist-previous.sorted fwlist-$(KVNAME).sorted > fwlist.diff
+	rm -f fwlist.diff fwlist-previous.sorted fwlist-$(KVNAME).sorted
 	@echo "done, no need to rebuild pve-firmware"
 
 
