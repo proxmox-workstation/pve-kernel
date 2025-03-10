@@ -136,9 +136,9 @@ $(KERNEL_SRC).prepared: $(KERNEL_SRC_SUBMODULE) | submodule
 	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -e UBUNTU_ODM_DRIVERS
 	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -m UBUNTU_HOST
 	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -e LOCK_DOWN_IN_EFI_SECURE_BOOT
-	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -d SENSORS_AAEON
-	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -d CONFIG_MFD_AAEON
-	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -d LEDS_AAEON
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -m SENSORS_AAEON
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -m CONFIG_MFD_AAEON
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -m LEDS_AAEON
 # Use CLANG LTO
 	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config --enable LTO_CLANG_THIN
 	sed -i $(BUILD_DIR)/$(KERNEL_SRC)/Makefile -e 's/^EXTRAVERSION.*$$/EXTRAVERSION=$(EXTRAVERSION)/'
