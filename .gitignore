@@ -5,3 +5,4 @@ ubuntu-zesty
 /dwarves
 /dwarves_build
 /proxmox-kernel-*
+/*.deb
