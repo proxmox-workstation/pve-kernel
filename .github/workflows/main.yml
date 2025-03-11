@@ -113,7 +113,7 @@ jobs:
       - name: Make release
         uses: softprops/action-gh-release@v2
         with:
-          name: linux-kernel-${{ github.ref_name }}
+          name: linux-kernel-${{ github.sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
           target_commitish: ${{ github.sha }}
           tag_name: ${{ github.ref_name }}
