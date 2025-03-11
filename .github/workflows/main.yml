@@ -109,10 +109,12 @@ jobs:
           path: .
 
       - name: Make release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          name: linux-kernel-${{needs.build.outputs.full_version}}
+          name: linux-kernel-${{ github.ref_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          target_commitish: ${{ github.sha }}
+          tag_name: ${{ github.ref_name }}
           draft: false
           prerelease: true
           fail_on_unmatched_files: true
