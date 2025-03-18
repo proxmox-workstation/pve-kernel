@@ -47,7 +47,7 @@ jobs:
           export DEBIAN_FRONTEND=noninteractive
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
-          ./llvm.sh
+          ./llvm.sh 18
           apt-get install -y clang-18 lldb-18 lld-18 clangd-18
           ln -s /usr/bin/clang++-18 /usr/bin/clang++
           ln -s /usr/bin/clang-18 /usr/bin/clang
