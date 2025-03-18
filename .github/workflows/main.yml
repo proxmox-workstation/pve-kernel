@@ -74,7 +74,7 @@ jobs:
           apt-get install -y cmake python3 python3-matplotlib zlib1g-dev libelf-dev
           git clone https://github.com/acmel/dwarves.git --recursive --branch v1.29 --single-branch
           cmake -S dwarves -B dwarves_build -G "Unix Makefiles" -D __LIB=lib -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr -DBUILD_SHARED_LIBS=OFF
-      - name: Build the kernel
+      - name: Prepare the build environment
         id: build-kernel-package
         run: |
           echo 'deb [arch=amd64] http://download.proxmox.com/debian/pve bookworm pve-no-subscription' > /etc/apt/sources.list.d/pve-install-repo.list
@@ -88,7 +88,10 @@ jobs:
           cmake --build dwarves_build
           cmake --install dwarves_build
           rm -rf dwarves_build
-          LLVM=1 LLVM_IAS=1 make -j$(nproc) deb
+      - name: Build the kernel
+        id: build-kernel-package
+        run: |
+          LLVM=1 LLVM_IAS=1 CFLAGS=" -mtune=raptorlake " make -j$(nproc) deb
           echo "full_version=${{ github.sha }}" >> "$GITHUB_OUTPUT"
       - name: Upload package artifact
         uses: actions/upload-artifact@v4
