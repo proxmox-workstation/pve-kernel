@@ -75,7 +75,7 @@ jobs:
           git clone https://github.com/acmel/dwarves.git --recursive --branch v1.29 --single-branch
           cmake -S dwarves -B dwarves_build -G "Unix Makefiles" -D __LIB=lib -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr -DBUILD_SHARED_LIBS=OFF
       - name: Prepare the build environment
-        id: build-kernel-package
+        id: prepare-build-env
         run: |
           echo 'deb [arch=amd64] http://download.proxmox.com/debian/pve bookworm pve-no-subscription' > /etc/apt/sources.list.d/pve-install-repo.list
           echo 'deb http://security.debian.org/debian-security bookworm-security main contrib' >> /etc/apt/sources.list.d/pve-install-repo.list
