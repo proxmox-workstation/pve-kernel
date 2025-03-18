@@ -1,6 +1,6 @@
 [submodule "submodules/zfsonlinux"]
 	path = submodules/zfsonlinux
-	url = https://github.com/proxmox-workstation/zfsonlinux.git
+	url = ../zfsonlinux.git
 [submodule "submodules/ubuntu-kernel"]
 	path = submodules/ubuntu-kernel
 	url = ../linux
