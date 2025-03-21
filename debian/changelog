@@ -1,3 +1,9 @@
+proxmox-kernel-6.12 (6.12.19-1) bookworm; urgency=medium
+
+  * rebased to 6.12.19
+
+ -- Denis Benato <benato.denis96@gmail.com>  Fri, 21 Mar 2025 17:11:58 +0100
+
 proxmox-kernel-6.12 (6.12.18-1) bookworm; urgency=medium
 
   * updated sources to my own liking
