@@ -119,7 +119,7 @@ jobs:
           name: linux-kernel-${{ github.sha }}
           token: ${{ secrets.GITHUB_TOKEN }}
           target_commitish: ${{ github.sha }}
-          tag_name: ${{ github.ref_name }}
+          tag_name: ${{ github.sha }}
           draft: false
           prerelease: true
           fail_on_unmatched_files: true
