@@ -74,14 +74,16 @@ jobs:
           apt-get update
           apt-get install -y libpve-common-perl
           yes | mk-build-deps -ir submodules/zfsonlinux/debian/control
-          export LLVM=1 LLVM_IAS=1
+          export LLVM=-18 LLVM_IAS=1
+          export CC="clang-18"
+          export CXX="clang++-18"
           cmake --build dwarves_build
           cmake --install dwarves_build
           rm -rf dwarves_build
       - name: Build the kernel
         id: build-kernel-package
         run: |
-          LLVM=1 LLVM_IAS=1 CFLAGS=" -mtune=raptorlake " make -j$(nproc) deb
+          LLVM=-18 LLVM_IAS=1 CFLAGS=" -mtune=raptorlake " make -j$(nproc) deb
           echo "full_version=${{ github.sha }}" >> "$GITHUB_OUTPUT"
       - name: Upload package artifact
         uses: actions/upload-artifact@v4
