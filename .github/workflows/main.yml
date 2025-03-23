@@ -68,6 +68,8 @@ jobs:
         run: |
           git config --global safe.directory '*'
           git submodule update --init --recursive
+      - id: commit
+        uses: prompt/actions-commit-hash@v3
       - name: Download pahole
         id: pahole
         run: |
@@ -116,10 +118,10 @@ jobs:
       - name: Make release
         uses: softprops/action-gh-release@v2
         with:
-          name: linux-kernel-${{ github.sha }}
+          name: linux-kernel-${{ steps.commit.outputs.short }}
           token: ${{ secrets.GITHUB_TOKEN }}
           target_commitish: ${{ github.sha }}
-          tag_name: ${{ github.sha }}
+          tag_name: ${{ steps.commit.outputs.short }}
           draft: false
           prerelease: true
           fail_on_unmatched_files: true
