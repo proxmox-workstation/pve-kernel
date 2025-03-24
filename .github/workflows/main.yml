@@ -7,7 +7,7 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
+  build_and_push:
     runs-on: ubuntu-latest
     outputs:
       full_version: ${{ steps.tag.outputs.full_version }}
@@ -59,7 +59,8 @@ jobs:
           git submodule update --init --recursive
       - id: commit
         uses: prompt/actions-commit-hash@v3
-      - id: tag
+      - name: Prepare tag operations
+        id: tag
         run: |
           echo "full_version=${{ github.sha }}" >> "$GITHUB_OUTPUT"
           echo "tag=${{ steps.commit.outputs.short }}" >> "$GITHUB_OUTPUT"
