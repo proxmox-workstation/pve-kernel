@@ -141,6 +141,10 @@ $(KERNEL_SRC).prepared: $(KERNEL_SRC_SUBMODULE) | submodule
 	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -m SENSORS_AAEON
 	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -m CONFIG_MFD_AAEON
 	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -m LEDS_AAEON
+# Compress kernel modules
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -e CONFIG_MODULE_COMPRESS
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -e CONFIG_MODULE_COMPRESS_ZSTD
+	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config -e CONFIG_MODULE_DECOMPRESS
 # Use CLANG LTO
 	cd $(BUILD_DIR)/$(KERNEL_SRC) && scripts/config --enable LTO_CLANG_THIN
 	sed -i $(BUILD_DIR)/$(KERNEL_SRC)/Makefile -e 's/^EXTRAVERSION.*$$/EXTRAVERSION=$(EXTRAVERSION)/'
