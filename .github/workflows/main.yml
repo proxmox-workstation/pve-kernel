@@ -91,7 +91,10 @@ jobs:
       - name: Build the kernel
         id: build-kernel-package
         run: |
-          LLVM=-18 LLVM_IAS=1 INSTALL_MOD_STRIP=1 CFLAGS=" -mtune=raptorlake " make -j$(nproc) deb
+          CC=clang-18 LD=ld.lld-18 AR=llvm-ar-18 NM=llvm-nm-18 STRIP=llvm-strip-18 \
+          OBJCOPY=llvm-objcopy-18 OBJDUMP=llvm-objdump-18 READELF=llvm-readelf-18 \
+          HOSTCC=clang-18 HOSTCXX=clang++-18 HOSTAR=llvm-ar-18 HOSTLD=ld.lld-18 \
+          LLVM_IAS=1 INSTALL_MOD_STRIP=1 CFLAGS=" -mtune=raptorlake " make -j$(nproc) deb
       - name: Upload package artifact
         uses: actions/upload-artifact@v4
         with:
