@@ -2,7 +2,7 @@ proxmox-kernel-6.12 (6.12.20-1) bookworm; urgency=medium
 
   * rebased to 6.12.20
 
- -- Denis Benato <benato.denis96@gmail.com>  Fri, 21 Mar 2025 17:11:58 +0100
+ -- Denis Benato <benato.denis96@gmail.com>  Tue, 25 Mar 2025 22:28:00 +0200
 
 proxmox-kernel-6.12 (6.12.19-1) bookworm; urgency=medium
 
